@@ -6,9 +6,13 @@ import tkinter as tk
 from tkinter import messagebox, filedialog, simpledialog
 import shutil
 
-# Configure logging
-logging.basicConfig(filename='noita_save_manager.log', level=logging.INFO, 
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure custom logger
+logger = logging.getLogger('NoitaSaveManager')
+handler = logging.FileHandler('noita_save_manager.log')
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 username = os.getlogin()
 
@@ -27,20 +31,20 @@ def load_variables():
             for line in f:
                 key, value = line.split("=")
                 current_variables[key] = value.strip()
-        logging.info("Variables loaded successfully.")
+        logger.info("Variables loaded successfully.")
     except FileNotFoundError:
-        logging.warning("Variables file not found, using default variables.")
+        logger.warning("Variables file not found, using default variables.")
     except Exception as e:
-        logging.error(f"Error loading variables: {e}")
+        logger.error(f"Error loading variables: {e}")
 
 def save_current_variables():
     try:
         with open("variables.txt", "w") as f:
             for key in current_variables:
                 f.write(f"{key}={current_variables[key]}\n")
-        logging.info("Current variables saved successfully.")
+        logger.info("Current variables saved successfully.")
     except Exception as e:
-        logging.error(f"Failed to save current variables: {e}")
+        logger.error(f"Failed to save current variables: {e}")
 
 def backup_save(save_name):
     save_folder = current_variables["path_to_noita_saves_folder"]
@@ -55,9 +59,9 @@ def backup_save(save_name):
     try:
         shutil.copytree(current_save_folder, backup_folder_path)
         messagebox.showinfo("Success", f"Backup created at {backup_folder_path}")
-        logging.info(f"Backup created at {backup_folder_path}")
+        logger.info(f"Backup created at {backup_folder_path}")
     except Exception as e:
-        logging.error(f"Failed to create backup: {e}")
+        logger.error(f"Failed to create backup: {e}")
         messagebox.showerror("Error", f"Failed to create backup: {e}")
 
 def list_save_backups(mode):
@@ -86,22 +90,22 @@ def activate_backup(choice):
         restore_save(current_save_folder, backup_folder)
         shutil.rmtree(temp_backup_folder)
         messagebox.showinfo("Success", "Save restored.")
-        logging.info("Save restored.")
+        logger.info("Save restored.")
     except Exception as e:
-        logging.error(f"Failed to activate save: {e}")
+        logger.error(f"Failed to activate save: {e}")
         messagebox.showerror("Error", f"Failed to activate save: {e}")
         try:
             restore_save(current_save_folder, temp_backup_folder)
             shutil.rmtree(temp_backup_folder)
         except Exception as e:
-            logging.error(f"Failed to restore temporary backup: {e}")
+            logger.error(f"Failed to restore temporary backup: {e}")
 
 def restore_save(current_save_folder, backup_folder):
     try:
         shutil.rmtree(current_save_folder)
         shutil.copytree(backup_folder, current_save_folder)
     except Exception as e:
-        logging.error(f"Failed to restore save: {e}")
+        logger.error(f"Failed to restore save: {e}")
         raise
 
 def confirm_delete_backup(backup_folder):
@@ -114,9 +118,9 @@ def delete_backup(backup_folder):
     try:
         shutil.rmtree(backup_folder_path)
         messagebox.showinfo("Success", "Backup deleted.")
-        logging.info("Backup deleted.")
+        logger.info("Backup deleted.")
     except Exception as e:
-        logging.error(f"Failed to delete backup: {e}")
+        logger.error(f"Failed to delete backup: {e}")
         messagebox.showerror("Error", f"Failed to delete backup: {e}")
 
 def launch_noita():
@@ -131,10 +135,10 @@ def change_path_to_noita_saves_folder():
         current_variables["path_to_noita_saves_folder"] = path
         save_current_variables()
         messagebox.showinfo("Success", "Path to Noita save folder has been changed.")
-        logging.info("Path to Noita save folder has been changed.")
+        logger.info("Path to Noita save folder has been changed.")
     else:
         messagebox.showwarning("Invalid Path", "Invalid path. Please try again.")
-        logging.warning("Invalid path entered for Noita save folder.")
+        logger.warning("Invalid path entered for Noita save folder.")
 
 def change_path_to_noita_mp_proxy():
     path = filedialog.askopenfilename()
@@ -142,22 +146,22 @@ def change_path_to_noita_mp_proxy():
         current_variables["path_to_noita_mp_proxy"] = path
         save_current_variables()
         messagebox.showinfo("Success", "Path to Noita MP Proxy has been changed.")
-        logging.info("Path to Noita MP Proxy has been changed.")
+        logger.info("Path to Noita MP Proxy has been changed.")
     else:
         messagebox.showwarning("Invalid Path", "Invalid path. Please try again.")
-        logging.warning("Invalid path entered for Noita MP Proxy.")
+        logger.warning("Invalid path entered for Noita MP Proxy.")
 
 def launch_subprocess_and_log_errors(command):
     try:
         result = subprocess.run(command, check=True)
         if result.returncode == 0:
-            logging.info(f"Command executed successfully: {command}")
+            logger.info(f"Command executed successfully: {command}")
         else:
-            logging.error(f"Command failed with return code {result.returncode}: {command}")
+            logger.error(f"Command failed with return code {result.returncode}: {command}")
     except subprocess.CalledProcessError as e:
-        logging.error(f"Command failed: {e}")
+        logger.error(f"Command failed: {e}")
     except Exception as e:
-        logging.error(f"An unexpected error occurred: {e}")
+        logger.error(f"An unexpected error occurred: {e}")
 
 def create_main_window():
     root = tk.Tk()
@@ -189,7 +193,7 @@ def create_main_window():
             current_variables.update(default_variables)
             save_current_variables()
             messagebox.showinfo("Success", "Default settings restored.")
-            logging.info("Default settings restored.")
+            logger.info("Default settings restored.")
             settings_window.destroy()
 
         tk.Button(settings_window, text="Change path to Noita save folder", command=on_change_noita_saves_folder).pack(pady=5)
