@@ -1,10 +1,10 @@
-import os
-from datetime import datetime
 import logging
+import os
+import shutil
 import subprocess
 import tkinter as tk
+from datetime import datetime
 from tkinter import messagebox, filedialog, simpledialog
-import shutil
 
 # Configure custom logger
 logger = logging.getLogger('NoitaSaveManager')
@@ -160,8 +160,10 @@ def launch_subprocess_and_log_errors(command):
             logger.error(f"Command failed with return code {result.returncode}: {command}")
     except subprocess.CalledProcessError as e:
         logger.error(f"Command failed: {e}")
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
+    except FileNotFoundError as e:
+        logger.error(f"File not found: {e}")
+    except PermissionError as e:
+        logger.error(f"Permission error: {e}")
 
 def create_main_window():
     root = tk.Tk()
