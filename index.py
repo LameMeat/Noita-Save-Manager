@@ -19,8 +19,8 @@ username = os.getlogin()
 default_variables = {
     "path_to_noita_saves_folder": f"C:/Users/{username}/AppData/LocalLow/Nolla_Games_Noita",
     "path_to_noita_mp_proxy": f"C:/Users/{username}/AppData/LocalLow/Nolla_Games_Noita/NoitaMPProxy.exe",
-    "path_to_noita_exe": f"C:/Program Files (x86)/Steam/steamapps/common/Noita/noita.exe",
-    "backup_prefix": f"BACKUP_"
+    "path_to_noita_exe": "C:/Program Files (x86)/Steam/steamapps/common/Noita/noita.exe",
+    "backup_prefix": "BACKUP_"
 }
 
 current_variables = default_variables.copy()
@@ -34,7 +34,9 @@ def load_variables():
         logger.info("Variables loaded successfully.")
     except FileNotFoundError:
         logger.warning("Variables file not found, using default variables.")
-    except Exception as e:
+    except (ValueError, IndexError) as e:
+        logger.error(f"Error parsing variables: {e}")
+    except OSError as e:
         logger.error(f"Error loading variables: {e}")
 
 def save_current_variables():
