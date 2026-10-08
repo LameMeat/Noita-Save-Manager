@@ -5,7 +5,7 @@ import subprocess
 from datetime import datetime, timezone
 
 import tkinter as tk
-from tkinter import messagebox, filedialog, simpledialog
+from tkinter import filedialog, messagebox, simpledialog
 
 # Configure custom logger
 logger = logging.getLogger('NoitaSaveManager')
