@@ -97,7 +97,7 @@ def activate_backup(choice):
         try:
             restore_save(current_save_folder, temp_backup_folder)
             shutil.rmtree(temp_backup_folder)
-        except Exception as e:
+        except FileNotFoundError as e:
             logger.error(f"Failed to restore temporary backup: {e}")
 
 def restore_save(current_save_folder, backup_folder):
@@ -119,7 +119,7 @@ def delete_backup(backup_folder):
         shutil.rmtree(backup_folder_path)
         messagebox.showinfo("Success", "Backup deleted.")
         logger.info("Backup deleted.")
-    except Exception as e:
+    except FileNotFoundError as e:
         logger.error(f"Failed to delete backup: {e}")
         messagebox.showerror("Error", f"Failed to delete backup: {e}")
 
