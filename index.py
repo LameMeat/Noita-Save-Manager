@@ -40,8 +40,7 @@ def load_variables():
 def save_current_variables():
     try:
         with open("variables.txt", "w") as f:
-            for key in current_variables:
-                f.write(f"{key}={current_variables[key]}\n")
+            f.writelines(f"{key}={current_variables[key]}\n" for key in current_variables)
         logger.info("Current variables saved successfully.")
     except OSError as e:
         logger.error(f"Failed to save current variables: {e}")
