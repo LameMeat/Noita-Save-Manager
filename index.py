@@ -60,7 +60,10 @@ def backup_save(save_name):
         shutil.copytree(current_save_folder, backup_folder_path)
         messagebox.showinfo("Success", f"Backup created at {backup_folder_path}")
         logger.info(f"Backup created at {backup_folder_path}")
-    except Exception as e:
+    except FileNotFoundError as e:
+        logger.error(f"Failed to create backup: {e}")
+        messagebox.showerror("Error", f"Failed to create backup: {e}")
+    except PermissionError as e:
         logger.error(f"Failed to create backup: {e}")
         messagebox.showerror("Error", f"Failed to create backup: {e}")
 
@@ -91,7 +94,7 @@ def activate_backup(choice):
         shutil.rmtree(temp_backup_folder)
         messagebox.showinfo("Success", "Save restored.")
         logger.info("Save restored.")
-    except Exception as e:
+    except FileNotFoundError as e:
         logger.error(f"Failed to activate save: {e}")
         messagebox.showerror("Error", f"Failed to activate save: {e}")
         try:
@@ -99,12 +102,18 @@ def activate_backup(choice):
             shutil.rmtree(temp_backup_folder)
         except FileNotFoundError as e:
             logger.error(f"Failed to restore temporary backup: {e}")
+    except PermissionError as e:
+        logger.error(f"Failed to activate save: {e}")
+        messagebox.showerror("Error", f"Failed to activate save: {e}")
 
 def restore_save(current_save_folder, backup_folder):
     try:
         shutil.rmtree(current_save_folder)
         shutil.copytree(backup_folder, current_save_folder)
-    except Exception as e:
+    except FileNotFoundError as e:
+        logger.error(f"Failed to restore save: {e}")
+        raise
+    except PermissionError as e:
         logger.error(f"Failed to restore save: {e}")
         raise
 
@@ -120,6 +129,9 @@ def delete_backup(backup_folder):
         messagebox.showinfo("Success", "Backup deleted.")
         logger.info("Backup deleted.")
     except FileNotFoundError as e:
+        logger.error(f"Failed to delete backup: {e}")
+        messagebox.showerror("Error", f"Failed to delete backup: {e}")
+    except PermissionError as e:
         logger.error(f"Failed to delete backup: {e}")
         messagebox.showerror("Error", f"Failed to delete backup: {e}")
 
