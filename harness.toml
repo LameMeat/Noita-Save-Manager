@@ -8,4 +8,4 @@ cmd = "python -c 'import tkinter'"
 
 [[qa.check]]
 name = "Run Linter"
-cmd = "ruff check ."
+cmd = "ruff check . --fix"
