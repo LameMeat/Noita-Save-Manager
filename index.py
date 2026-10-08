@@ -2,8 +2,8 @@ import logging
 import os
 import shutil
 import subprocess
+from datetime import datetime, timezone
 import tkinter as tk
-from datetime import datetime
 from tkinter import messagebox, filedialog, simpledialog
 
 # Configure custom logger
@@ -52,7 +52,7 @@ def backup_save(save_name):
         messagebox.showwarning("Invalid Input", "Backup name cannot be empty.")
         return
     backup_name = f"{current_variables['backup_prefix']}{save_name}_"
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
     backup_folder_name = f"{backup_name}{timestamp}"
     backup_folder_path = os.path.join(save_folder, backup_folder_name)
     current_save_folder = os.path.join(save_folder, "save00")
