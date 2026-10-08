@@ -43,7 +43,7 @@ def save_current_variables():
             for key in current_variables:
                 f.write(f"{key}={current_variables[key]}\n")
         logger.info("Current variables saved successfully.")
-    except Exception as e:
+    except IOError as e:
         logger.error(f"Failed to save current variables: {e}")
 
 def backup_save(save_name):
