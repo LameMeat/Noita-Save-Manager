@@ -1,0 +1,11 @@
+# QA checks — authored + LOCKED by the Inspector (ADR-0025). Supervisor-owned: the QA
+# runner reads the locked set from the harness database, NOT this file. Editing this
+# file has no effect on QA and flags the task for review.
+
+[[qa.check]]
+name = "Check Tkinter Import"
+cmd = "python -c 'import tkinter'"
+
+[[qa.check]]
+name = "Run Linter"
+cmd = "ruff check ."
