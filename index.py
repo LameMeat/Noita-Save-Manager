@@ -3,7 +3,8 @@ from datetime import datetime
 import logging
 import subprocess
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog, simpledialog
+import shutil
 
 # Configure logging
 logging.basicConfig(filename='noita_save_manager.log', level=logging.INFO, 
