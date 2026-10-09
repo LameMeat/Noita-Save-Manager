@@ -88,9 +88,12 @@ def restore_save(current_save_folder, backup_folder):
         shutil.copytree(backup_folder, current_save_folder, copy_function=lambda src, dst: copy_with_progress(src, dst, total_files, copied_files))
         print("Save restored.")
         logger.info("Save restored.")
-    except Exception as e:
+    except FileNotFoundError as e:
         logger.error(f"Failed to restore save: {e}")
         print(f"Failed to restore save: {e}")
+    except PermissionError as e:
+        logger.error(f"Permission error while activating save: {e}")
+        print(f"Permission error while activating save: {e}")
 
 def confirm_delete_backup(backup_folder):
     choice = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete {backup_folder}?")
@@ -103,7 +106,7 @@ def delete_backup(backup_folder):
         shutil.rmtree(backup_folder)
         print("Backup deleted.")
         logger.info("Backup deleted.")
-    except Exception as e:
+    except FileNotFoundError as e:
         logger.error(f"Failed to delete backup: {e}")
         print(f"Failed to delete backup: {e}")
 
