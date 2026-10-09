@@ -3,7 +3,7 @@ import os
 import shutil
 import subprocess
 import tkinter as tk
-from datetime import datetime
+from datetime import datetime, timezone
 from tkinter import filedialog, messagebox, simpledialog
 
 # Configure custom logger
@@ -112,7 +112,7 @@ def name_backup_save():
     if not save_name:
         return
     backup_name = f"{current_variables['backup_prefix']}{save_name}_"
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
     backup_folder_name = f"{backup_name}{timestamp}"
     backup_folder_path = os.path.join(current_variables["path_to_noita_saves_folder"], backup_folder_name)
     current_save_folder = os.path.join(current_variables["path_to_noita_saves_folder"], "save00")
@@ -147,9 +147,14 @@ def activate_backup(choice):
         restore_save(current_save_folder, backup_folder)
         print("Removing temporary backup...")
         shutil.rmtree(temp_backup_folder)
-    except Exception as e:
+    except FileNotFoundError as e:
         logger.error(f"Failed to activate save: {e}")
         print(f"Failed to activate save: {e}")
+        print("Restoring temporary backup...")
+        restore_save(current_save_folder, temp_backup_folder)
+    except PermissionError as e:
+        logger.error(f"Permission error while activating save: {e}")
+        print(f"Permission error while activating save: {e}")
         print("Restoring temporary backup...")
         restore_save(current_save_folder, temp_backup_folder)
 
