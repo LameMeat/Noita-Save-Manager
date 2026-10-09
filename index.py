@@ -44,7 +44,7 @@ def save_current_variables():
         with open("variables.txt", "w") as f:
             f.writelines(f"{key}={current_variables[key]}\n" for key in current_variables)
         logger.info("Current variables saved successfully.")
-    except IOError as e:
+    except OSError as e:
         logger.error(f"Failed to save current variables: {e}")
         print(f"Failed to save current variables: {e}")
 
