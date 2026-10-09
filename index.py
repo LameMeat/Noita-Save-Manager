@@ -35,7 +35,7 @@ def load_variables():
     except FileNotFoundError:
         logger.warning("Variables file not found, using default variables.")
         print("Variables file not found, using default variables.")
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Error loading variables: {e}")
         print(f"Error loading variables: {e}")
 
