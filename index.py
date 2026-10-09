@@ -59,9 +59,12 @@ def launch_subprocess_and_log_errors(command):
     except subprocess.CalledProcessError as e:
         logger.error(f"Command failed: {e}")
         print(f"Command failed: {e}")
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
-        print(f"An unexpected error occurred: {e}")
+    except FileNotFoundError as e:
+        logger.error(f"File not found error: {e}")
+        print(f"File not found error: {e}")
+    except PermissionError as e:
+        logger.error(f"Permission error: {e}")
+        print(f"Permission error: {e}")
 
 def copy_with_progress(src, dst, total_files, copied_files):
     shutil.copy2(src, dst)
