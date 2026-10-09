@@ -103,6 +103,12 @@ def delete_backup(backup_folder):
         shutil.rmtree(backup_folder)
         print("Backup deleted.")
         logger.info("Backup deleted.")
+    except FileNotFoundError as e:
+        logger.error(f"File not found: {e}")
+        print(f"File not found: {e}")
+    except PermissionError as e:
+        logger.error(f"Permission denied: {e}")
+        print(f"Permission denied: {e}")
     except Exception as e:
         logger.error(f"Failed to delete backup: {e}")
         print(f"Failed to delete backup: {e}")
@@ -147,6 +153,16 @@ def activate_backup(choice):
         restore_save(current_save_folder, backup_folder)
         print("Removing temporary backup...")
         shutil.rmtree(temp_backup_folder)
+    except FileNotFoundError as e:
+        logger.error(f"File not found: {e}")
+        print(f"File not found: {e}")
+        print("Restoring temporary backup...")
+        restore_save(current_save_folder, temp_backup_folder)
+    except PermissionError as e:
+        logger.error(f"Permission denied: {e}")
+        print(f"Permission denied: {e}")
+        print("Restoring temporary backup...")
+        restore_save(current_save_folder, temp_backup_folder)
     except Exception as e:
         logger.error(f"Failed to activate save: {e}")
         print(f"Failed to activate save: {e}")
