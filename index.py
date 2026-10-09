@@ -4,7 +4,7 @@ import logging
 import subprocess
 import shutil
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox, simpledialog, filedialog
 
 # Configure logging
 logging.basicConfig(filename='noita_save_manager.log', level=logging.INFO, 
