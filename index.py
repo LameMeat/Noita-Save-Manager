@@ -76,9 +76,12 @@ def backup_save(current_save_folder, backup_folder_path):
         shutil.copytree(current_save_folder, backup_folder_path, copy_function=lambda src, dst: copy_with_progress(src, dst, total_files, copied_files))
         print(f"\nBackup created at {backup_folder_path}")
         logger.info(f"Backup created at {backup_folder_path}")
-    except Exception as e:
+    except FileNotFoundError as e:
         logger.error(f"Failed to create backup: {e}")
         print(f"Failed to create backup: {e}")
+    except PermissionError as e:
+        logger.error(f"Permission error while creating backup: {e}")
+        print(f"Permission error while creating backup: {e}")
 
 def restore_save(current_save_folder, backup_folder):
     try:
