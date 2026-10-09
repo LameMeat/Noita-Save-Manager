@@ -1,10 +1,10 @@
-import os
-from datetime import datetime
 import logging
-import subprocess
+import os
 import shutil
+import subprocess
 import tkinter as tk
-from tkinter import messagebox, simpledialog, filedialog
+from datetime import datetime
+from tkinter import filedialog, messagebox, simpledialog
 
 # Configure logging
 logging.basicConfig(filename='noita_save_manager.log', level=logging.INFO, 
@@ -15,8 +15,8 @@ username = os.getlogin()
 default_variables = {
     "path_to_noita_saves_folder": f"C:/Users/{username}/AppData/LocalLow/Nolla_Games_Noita",
     "path_to_noita_mp_proxy": f"C:/Users/{username}/AppData/LocalLow/Nolla_Games_Noita/NoitaMPProxy.exe",
-    "path_to_noita_exe": f"C:/Program Files (x86)/Steam/steamapps/common/Noita/noita.exe",
-    "backup_prefix": f"BACKUP_"
+    "path_to_noita_exe": "C:/Program Files (x86)/Steam/steamapps/common/Noita/noita.exe",
+    "backup_prefix": "BACKUP_"
 }
 
 current_variables = default_variables.copy()
@@ -38,8 +38,7 @@ def load_variables():
 def save_current_variables():
     try:
         with open("variables.txt", "w") as f:
-            for key in current_variables:
-                f.write(f"{key}={current_variables[key]}\n")
+            f.writelines(f"{key}={current_variables[key]}\n" for key in current_variables)
         logging.info("Current variables saved successfully.")
     except Exception as e:
         logging.error(f"Failed to save current variables: {e}")
@@ -137,17 +136,17 @@ def activate_backup(choice):
     backup_folder = os.path.join(save_folder, choice)
     current_save_folder = os.path.join(save_folder, "save00")
     temp_backup_folder = os.path.join(save_folder, f"{current_variables['backup_prefix']}TEMP")
-    print(f"Creating temporary backup of current save...")
+    print("Creating temporary backup of current save...")
     backup_save(current_save_folder, temp_backup_folder)
-    print(f"Activating save...")
+    print("Activating save...")
     try:
         restore_save(current_save_folder, backup_folder)
-        print(f"Removing temporary backup...")
+        print("Removing temporary backup...")
         shutil.rmtree(temp_backup_folder)
     except Exception as e:
         logging.error(f"Failed to activate save: {e}")
         print(f"Failed to activate save: {e}")
-        print(f"Restoring temporary backup...")
+        print("Restoring temporary backup...")
         restore_save(current_save_folder, temp_backup_folder)
 
 def change_path_to_noita_saves_folder():
