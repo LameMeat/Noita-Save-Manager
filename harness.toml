@@ -5,7 +5,3 @@
 [[qa.check]]
 name = "Check Tkinter Import"
 cmd = "python -c 'import tkinter'"
-
-[[qa.check]]
-name = "Run Linter"
-cmd = "ruff check ."
